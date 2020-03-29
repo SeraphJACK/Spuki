@@ -37,10 +37,6 @@ export = (app: Application) => {
     await addLabel(context, "Status: Pending");
   });
 
-  app.on("issue_comment", async (context) => {
-    // app.log(context);
-  });
-
   app.on(
     ["pull_request.opened", "pull_request.edited", "pull_request.synchronize"],
     Git.onPullRequestCreated,

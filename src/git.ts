@@ -77,7 +77,7 @@ export default class Git {
         description: "Generating preview pages...",
       });
     } catch (e) {
-      // console.error(e);
+      console.error(e);
     }
 
     Git.prWaitChain.then(async () => {
