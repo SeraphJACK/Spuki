@@ -96,6 +96,11 @@ export default class Git {
             "previews",
             String(id),
           )}`,
+          {
+            env: {
+              "BASE_URL": `/${pr.number}/`
+            }
+          }
         );
       } catch (e) {
         fail =
