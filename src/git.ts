@@ -91,16 +91,11 @@ export default class Git {
         await Git.checkout("repo", `pull/${id}`);
         await Git.pull("repo", `pull/${id}/head`);
         child_process.execSync(
-          `vuepress build ${path.resolve(".", "repo", "docs")} -d ${path.resolve(
+          `export BASE_URL=/${pr.number}/ && vuepress build ${path.resolve(".", "repo", "docs")} -d ${path.resolve(
             ".",
             "previews",
             String(id),
-          )}`,
-          {
-            env: {
-              "BASE_URL": `/${pr.number}/`
-            }
-          }
+          )}`
         );
       } catch (e) {
         fail =
