@@ -45,4 +45,9 @@ export = (app: Application) => {
     ["pull_request.opened", "pull_request.edited", "pull_request.synchronize"],
     Git.onPullRequestCreated,
   );
+
+  app.on(
+    "pull_request.closed",
+    Git.onPullRequestFinalized
+  );
 };

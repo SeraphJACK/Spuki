@@ -7,12 +7,7 @@ import simplegit from "simple-git/promise";
 export default class Git {
   public static async init() {
     return Promise.all([
-      Git.clone(
-        "build",
-        "git@github.com:TeamCovertDragon/Harbinger.git",
-        "gh-pages",
-      ),
-      Git.clone("repo", "git@github.com:TeamCovertDragon/Harbinger.git"),
+      Git.clone("repo", "git@github.com:TeamCovertDragon/Sputnik.git"),
     ]);
   }
 
@@ -89,27 +84,19 @@ export default class Git {
       let fail: string = "";
       try {
         await Git.init();
-        await Git.pull("build");
         const branches = (await Git.branch("repo")).branches;
         if (branches[`pull/${id}`] === undefined) {
           await Git.pull("repo", `pull/${id}/head:pull/${id}`);
         }
         await Git.checkout("repo", `pull/${id}`);
         await Git.pull("repo", `pull/${id}/head`);
-        child_process.execSync(`gitbook install ${path.resolve(".", "repo")}`);
         child_process.execSync(
-          `gitbook build ${path.resolve(".", "repo")} ${path.resolve(
+          `vuepress build ${path.resolve(".", "repo", "docs")} -d ${path.resolve(
             ".",
-            "build",
+            "previews",
             String(id),
           )}`,
         );
-        await Git.addAll("build");
-        await Git.commit(
-          "build",
-          `feat(pr. ${id}): Updated automatically at timestamp ${Date.now()}`,
-        );
-        await Git.push("build");
       } catch (e) {
         fail =
           String(e) !== ""
@@ -126,18 +113,29 @@ export default class Git {
           state: fail === "" ? "success" : "failure",
           target_url:
             fail === ""
-              ? `https://teamcovertdragon.github.io/Harbinger/${id}/`
-              : `https://github.com/TeamCovertDragon/Harbinger/pull/${id}`,
+              ? `https://sputnik-preview.covertdragon.team/${id}/`
+              : `https://github.com/TeamCovertDragon/Sputnik/pull/${id}`,
           description:
             fail === ""
-              ? `https://teamcovertdragon.github.io/Harbinger/${id}/`
+              ? `https://sputnik-preview.covertdragon.team/${id}/`
               : fail,
         });
       } catch (e) {
-        // console.error(e);
+        console.error(e);
       }
     });
   }
+
+  public static async onPullRequestFinalized(context: Context) {
+    const pr = context.issue();
+    const id = pr.number;
+    try {
+      fs.rmdirSync(path.resolve(".", "previews", String(id)));
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
   private static repos: Map<string, simplegit.SimpleGit> = new Map();
   private static prWaitChain = Promise.resolve();
 }
