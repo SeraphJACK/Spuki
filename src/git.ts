@@ -72,7 +72,7 @@ export default class Git {
       await context.github.repos.createStatus({
         ...repo,
         sha,
-        context: "Yuki",
+        context: "Spuki",
         state: "pending",
         description: "Generating preview pages...",
       });
@@ -109,7 +109,7 @@ export default class Git {
         await context.github.repos.createStatus({
           ...repo,
           sha,
-          context: "Yuki",
+          context: "Spuki",
           state: fail === "" ? "success" : "failure",
           target_url:
             fail === ""
