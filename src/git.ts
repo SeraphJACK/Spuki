@@ -130,7 +130,7 @@ export default class Git {
     const pr = context.issue();
     const id = pr.number;
     try {
-      fs.rmdirSync(path.resolve(".", "previews", String(id)));
+      child_process.execSync(`rm -rf ${path.resolve(".", "previews", String(id))}`);
     } catch (e) {
       console.error(e);
     }
