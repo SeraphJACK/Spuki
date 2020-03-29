@@ -95,7 +95,7 @@ export default class Git {
             ".",
             "previews",
             String(id),
-          )}`
+          )} -t ~/.temp`
         );
       } catch (e) {
         fail =
