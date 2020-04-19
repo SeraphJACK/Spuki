@@ -91,13 +91,17 @@ export default class Git {
         await Git.checkout("repo", `pull/${id}`);
         await Git.pull("repo", `pull/${id}/head`);
         // TODO: check config.js
-        child_process.execSync(
-          `export BASE_URL=/${pr.number}/ && vuepress build ${path.resolve(".", "repo", "docs")} -d ${path.resolve(
-            ".",
-            "previews",
-            String(id),
-          )} -t ~/.temp`
-        );
+        if (false /*TODO: if config.js is modified*/) {
+          fail = "Preview generation canceled due to potential dangerous changes found.";
+        } else {
+          child_process.execSync(
+            `export BASE_URL=/${pr.number}/ && vuepress build ${path.resolve(".", "repo", "docs")} -d ${path.resolve(
+              ".",
+              "previews",
+              String(id),
+            )} -t ~/.temp`
+          );
+        }
       } catch (e) {
         fail =
           String(e) !== ""
